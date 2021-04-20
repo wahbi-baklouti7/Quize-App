@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quize_app/app_functionality.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -6,6 +8,40 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int totalCorrectAnswers = 0;
+  AppFunctionality appFunctionality = AppFunctionality();
+
+  void checkQuestion(bool choice) {
+    bool correct_choice = appFunctionality.getQuestionResult();
+    if (choice == correct_choice) {
+      totalCorrectAnswers++;
+    }
+    setState(() {
+      if (appFunctionality.isFinished() == true) {
+        Alert(
+          context: context,
+          type: AlertType.info,
+          title: "إنتهت الأسئلة",
+          desc:
+              "لقد أجبت على$totalCorrectAnswers من ${appFunctionality.getQuestionsNumber()}",
+          buttons: [
+            DialogButton(
+                child: Text(
+                  "إعادة اللعب",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () {
+                  setState(() {
+                    appFunctionality.resetGame();
+                    totalCorrectAnswers = 0;
+                  });
+                })
+          ],
+        ).show();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,17 +57,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: Column(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${appFunctionality.getQuestionsNumber()} :عدد الأسئلة",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    "${appFunctionality.currentQuestionNum()} :الأسئلة المتبقية",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.asset(
-                  "assets/images/image-1.jpg",
+                  appFunctionality.getQuestionImage(),
                 ),
               ),
               SizedBox(
                 height: 48,
               ),
               Text(
-                " الأرض تدور حول الشمس؟",
+                appFunctionality.getQuestionText(),
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
@@ -56,7 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Color.fromARGB(255, 76, 176, 81),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          onPressed: () {}),
+                          onPressed: () {
+                            bool choice = true;
+                            checkQuestion(choice);
+                            setState(() {
+                              appFunctionality.change_Question();
+                            });
+                          }),
                       RaisedButton(
                           padding: EdgeInsets.all(10),
                           child: Text(
@@ -69,7 +125,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Color.fromARGB(255, 244, 66, 53),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          onPressed: () {})
+                          onPressed: () {
+                            bool choice = false;
+                            checkQuestion(choice);
+                            setState(() {
+                              appFunctionality.change_Question();
+                            });
+                          })
                     ],
                   ),
                 ),

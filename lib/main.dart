@@ -12,7 +12,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "صحيح أو خطأ",
-
       home: HomeScreen(),
     );
   }
