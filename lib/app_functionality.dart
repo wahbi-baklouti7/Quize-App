@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-
 import 'questions.dart';
+
 
 class AppFunctionality {
   int _questionNumber = 0;
+  List<Widget> mark = [];
 
   List<Questions> _questionsList = [
     Questions(
-        questionText: "هل الإرض تدور حول الشمس",
+        questionText: " الأرض تدور حول الشمس",
         questionImage: "assets/images/image-1.jpg",
         result: true),
     Questions(
@@ -28,7 +28,7 @@ class AppFunctionality {
         questionImage: "assets/images/image-5.jpg",
         result: true),
     Questions(
-        questionText: "هل الدجاجة تطير",
+        questionText: " الدجاجة تطير",
         questionImage: "assets/images/image-6.jpg",
         result: false),
     Questions(
@@ -49,7 +49,7 @@ class AppFunctionality {
         result: true)
   ];
 
-  List mark = [];
+  
 
   String getQuestionText() {
     return _questionsList[_questionNumber].questionText;
@@ -88,4 +88,5 @@ class AppFunctionality {
   void resetGame() {
     _questionNumber = 0;
   }
+
 }

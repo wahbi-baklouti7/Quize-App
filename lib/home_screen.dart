@@ -10,13 +10,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int totalCorrectAnswers = 0;
   AppFunctionality appFunctionality = AppFunctionality();
+  List<Widget> mark = [];
 
   void checkQuestion(bool choice) {
     bool correct_choice = appFunctionality.getQuestionResult();
-    if (choice == correct_choice) {
-      totalCorrectAnswers++;
-    }
     setState(() {
+      if (choice == correct_choice) {
+        mark.add(Icon(
+          Icons.thumb_up,
+          color: Colors.green,
+          size: 28,
+        ));
+        totalCorrectAnswers++; //increment to total of correct answers
+      } else {
+        mark.add(Icon(
+          Icons.thumb_down,
+          color: Colors.red,
+          size: 28,
+        ));
+      }
+
       if (appFunctionality.isFinished() == true) {
         Alert(
           context: context,
@@ -34,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   setState(() {
                     appFunctionality.resetGame();
                     totalCorrectAnswers = 0;
+                    mark = [];
                   });
                 })
           ],
@@ -48,9 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Color.fromARGB(255, 135, 95, 192),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.fromLTRB(8, 48, 8, 0),
+          padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
           alignment: Alignment.center,
-          margin: EdgeInsets.all(24),
+          margin: EdgeInsets.all(15),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
@@ -59,18 +73,21 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "${appFunctionality.getQuestionsNumber()} :عدد الأسئلة",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 16),
                   ),
                   Text(
                     "${appFunctionality.currentQuestionNum()} :الأسئلة المتبقية",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 16),
                   ),
                 ],
               ),
+              SizedBox(
+                height: 48,
+              ),
+              Row(children: mark),
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.asset(
@@ -83,13 +100,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 appFunctionality.getQuestionText(),
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.1),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w300,
+                ),
+                textAlign: TextAlign.center,
               ),
               ButtonTheme(
                 height: 80,
                 minWidth: 120,
+                splashColor: Colors.amber,
                 child: Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -107,8 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           onPressed: () {
-                            bool choice = true;
-                            checkQuestion(choice);
+                            checkQuestion(true);
                             setState(() {
                               appFunctionality.change_Question();
                             });
@@ -126,8 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           onPressed: () {
-                            bool choice = false;
-                            checkQuestion(choice);
+                            checkQuestion(false);
                             setState(() {
                               appFunctionality.change_Question();
                             });
